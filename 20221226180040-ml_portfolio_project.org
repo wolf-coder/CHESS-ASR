@@ -1,0 +1,52 @@
+:PROPERTIES:
+:ID:       e4e4bfd5-7dd6-4d23-9dfb-03d888378732
+:END:
+#+title: ML - Portfolio Project
+
+
+- The peer learning day after this project, you (and your team if applicable) will present your project
+- You will have 20min max for the presentation and demo combined. Q&A will take place after this time.
+* 0. Presentation
+** Please provide your Google slides below. The presentation should include:
+*** Short description of the project and team
+- Selenium
+- vosk, Kaldi
+- lichess api
+*** Demo (either live (deployed publicly or in localhost) or recorded in a Youtube video)
+*** Architecture put in place
+**** vosk, Kaldi
+- open-gram
+- FST
+- dictionary
+**** Selenium
+- 
+**** lichess
+***** lichess api
+***** lichess account setup
+*** Technologies and/or third services used
+***** Selenium
+***** vosk, Kaldi
+***** lichess api
+*** Report of your developments:
+**** Successes
+- vosk language model adaptation
+
+**** Failures
+- 
+**** What can you improve?
+- acouastic model training
+**** What did you learn?
+- ASR complication
+- The complication of audio segmentation
+- The importance of GHMM, HMM
+- Processincg audio waveform
+
+*** What’s the next steps of your project?
+- Migrating the project to an application
+- websocket
+*** Ethical implications
+**** data privacy
+**** audio processing is done on the client side
+- no relevance in the terms of the user's privacy.
+*** Summary/conclusion
+- 
