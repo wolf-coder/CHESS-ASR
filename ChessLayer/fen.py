@@ -1,6 +1,44 @@
 #!/usr/bin/env python3
 import requests
 import chess
+
+Piece = {'K':"king",'Q':"queen",'N':"knight",'R':"rook",'B':"bishop"}
+
+Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'seven','8':'eight'}
+
+
+def Parse_move(move):
+    """
+    Function that takes a move and transcribe it to spoken text.
+    Args:
+    (move): string representing the pgn/fen move
+    Return:
+    (Parsed): Spoken text format for the pgn move
+    """
+    Parsed = ""
+    for char in move:
+        if char == 'O':
+            if len(move) == 3:
+                Parsed+="short castling"
+            else:
+                Parsed+="long castling"
+            break
+        if char == 'x':
+            Parsed+='takes on '
+        elif char == '+':
+            Parsed+=' check'
+        elif char.isupper():
+           Parsed+= Piece[char] + " "
+        elif char.islower():
+           Parsed+= char + " "
+        elif char.isdigit():
+           Parsed+= Number[char]+ " "
+        elif char == '#':
+            Parsed+=" Checkmate"
+    Parsed+=" \n"
+    return " ".join(Parsed.split())
+
+
 def get_fen():
     """
     """
@@ -42,5 +80,10 @@ def get_pieces():
             dic[move[0]].append(move)
     pieces = {'knight':dic['N'],'pawn':dic['P'],'king':dic['K'],'queen':dic['Q'],'bishop':dic['B'],'rook':dic['R']}
     updated = dict((key,value) for key, value in pieces.items() if value != [])
-    return updated
-
+    spk_fen={}
+    
+    for key in updated.keys():
+        spk_fen[key] = []
+        for fen in updated[key]:
+            spk_fen[key].append(Parse_move(fen))
+    return spk_fen

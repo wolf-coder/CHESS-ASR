@@ -1,13 +1,21 @@
-# legal_moves = get_legalMoves()
+# legal_moves = get_pieces()
 
-grammar0 = '["pawn king queen knight rook bishop ", "take takes on","a b c d e f g h", "one two three four five six seven eight"]'
-
-grammar1 = '["one zero one two three oh", "four five six", "seven eight nine zero", "[unk]"]'
+def moves_grammar(legal_moves):
+    """
+    processing the possible moves to spoken text
+    yourstring = "L{0}L".format(yourstring)
+    """
+    grammar = ''
+    for key, value in legal_moves.items():
+        for elem in value:
+            grammar+='\"{0}\", '.format(elem)
+    return '[{0},\"[unk]\"]'.format(grammar)
 
 def rec_grammar0(data, recognizer):
     """
     With grammar0
     """
+    
     if recognizer.AcceptWaveform(data):
         recognizerResult = recognizer.Result()
         print("recognizerResult:", recognizerResult)
