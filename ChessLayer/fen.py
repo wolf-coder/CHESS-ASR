@@ -19,7 +19,6 @@ def get_legalMoves():
     legal_moves = list(board.legal_moves)
 
     moves_t = str(board.legal_moves)[37:-1]
-    breakpoint()
     moves_t = moves_t.replace(", ", "', '")
     moves_t = moves_t.replace("(", "('")
     moves_t = moves_t.replace(")", "')")
@@ -29,3 +28,19 @@ def get_legalMoves():
     for i in moves_t:
         moves.append(i)
     return moves
+
+
+def get_pieces():
+    """
+    """
+    moves = get_legalMoves()
+    dic = {'N':[],'P':[],'K':[],'Q':[],'B':[],'R':[]}
+    for move in moves:
+        if move[0].islower():
+            dic['P'].append(move)
+        else:
+            dic[move[0]].append(move)
+    pieces = {'knight':dic['N'],'pawn':dic['P'],'king':dic['K'],'queen':dic['Q'],'bishop':dic['B'],'rook':dic['R']}
+    updated = dict((key,value) for key, value in pieces.items() if value != [])
+    return updated
+
