@@ -33,10 +33,12 @@ def recordCallback(indata, frames, time, status):
 # build the model and recognizer objects.
 print("===> Build the model and recognizer objects.  This will take a few minutes.")
 model = Model(lang="en-us")
-grammar0 = '["pawn king queen knight rook bishop ", "take takes on","a b c d e f g h", "one two three four five six seven eight"]'
-grammar1 = '["one zero one two three oh", "four five six", "seven eight nine zero", "[unk]"]'
+
 recognizer = KaldiRecognizer(model, samplerate)
 recognizer.SetWords(False)
+
+Waiting_Myturn(driver) # Placed
+
 
 print("===> Begin recording. Press Ctrl+C to stop the recording ")
 recognizer.SetGrammar(grammar0)
@@ -46,7 +48,7 @@ try:
                            callback=recordCallback):
         while True:
             data = q.get()
-            rec_grammar0(data, recognizer)
+            rec_grammar(data, recognizer)
 except KeyboardInterrupt:
     print('===> Finished Recording')
 except Exception as e:
