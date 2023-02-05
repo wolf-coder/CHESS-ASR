@@ -33,6 +33,8 @@ def Waiting_Myturn(driver):
     Function that listen to an element indicating whether  it is our turn  to play
     <> and get the legal moves when 
     """
+    print("Waiting Turn")
     wait = WebDriverWait(driver, 10000)
     element = wait.until(EC.presence_of_element_located((By.XPATH, "//title[contains(text(),'Your turn')]")))
+    
     print("Your Turn")

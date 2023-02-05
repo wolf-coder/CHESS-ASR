@@ -6,6 +6,8 @@ Piece = {'K':"king",'Q':"queen",'N':"knight",'R':"rook",'B':"bishop"}
 
 Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'seven','8':'eight'}
 
+Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x',""}
+
 
 def Parse_move(move):
     """
@@ -37,6 +39,37 @@ def Parse_move(move):
             Parsed+=" Checkmate"
     Parsed+=" \n"
     return " ".join(Parsed.split())
+
+
+
+def Spoken_ToFen(Spoken):
+    """
+    convert Spoken text to fen
+    Finish short castling...checkmate
+    """
+    Spoken = Spoken.replace("takes on", "x")
+    Spoken = Spoken.replace("take on", "x")
+    To_list = Spoken.split()
+    
+    spk =  ''
+    for  elem  in  To_list:
+        if len(elem) == 1:
+            spk+=elem
+        else:
+            spk+=Wrapped_Spk[elem]
+    return spk
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def get_fen():
@@ -87,3 +120,15 @@ def get_pieces():
         for fen in updated[key]:
             spk_fen[key].append(Parse_move(fen))
     return spk_fen
+
+
+def get_grammar(legal_moves):
+    """
+    processing the possible moves to spoken text
+    yourstring = "L{0}L".format(yourstring)
+    """
+    grammar = ''
+    for key, value in legal_moves.items():
+        for elem in value:
+            grammar+='\"{0}\", '.format(elem)
+    return '[{0}\"[unk]\"]'.format(grammar)

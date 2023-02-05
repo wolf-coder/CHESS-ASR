@@ -2,15 +2,26 @@
 """
 Resource:https://singerlinks.com/2022/03/how-to-convert-microphone-speech-to-text-using-python-and-vosk/
 """
+###  to delete
+from os import chdir
+chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
+###
+
+
 import queue
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer
 import sys
 import json
+
+
 ####  to start selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+
+from   Selenium.Selenium_Functions import *
+from ChessLayer.fen import *
 ####
 
 '''This script processes audio input from the microphone and displays the transcribed text.'''
@@ -44,22 +55,24 @@ recognizer.SetWords(False)
 
 
 ### Starting selenium
-service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
-Connect_To_Lichess(driver)
+#service = ChromeService(executable_path=ChromeDriverManager().install())
+#driver = webdriver.Chrome(service=service)
+#Connect_To_Lichess(driver) #?
 ###
-Waiting_Myturn(driver) # Placed
-
-
+#Waiting_Myturn(driver) # Placed
+#grammar = get_grammar(get_pieces())
+grammar0= '["night", "[unk]"]'
+grammar = '["knight h three", "knight f three", "knight c three", "knight a three", "h three", "g three", "f three", "e three", "d three", "c three", "b three", "a three", "h four", "g four", "f four", "e four", "d four", "c four", "b four", "a four", "[unk]"]'  # to ommit
 print("===> Begin recording. Press Ctrl+C to stop the recording ")
-recognizer.SetGrammar(grammar0)
+recognizer.SetGrammar(grammar)
 try:
     with sd.RawInputStream(dtype='int16',
                            channels=1,
                            callback=recordCallback):
         while True:
             data = q.get()
-            rec_grammar(data, recognizer)
+            rec_process(data, recognizer)
+
 except KeyboardInterrupt:
     print('===> Finished Recording')
 except Exception as e:
