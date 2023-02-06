@@ -55,14 +55,14 @@ recognizer.SetWords(False)
 
 
 ### Starting selenium
-#service = ChromeService(executable_path=ChromeDriverManager().install())
-#driver = webdriver.Chrome(service=service)
-#Connect_To_Lichess(driver) #?
+service = ChromeService(executable_path=ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service)
+Connect_To_Lichess(driver) #?
 ###
-#Waiting_Myturn(driver) # Placed
-#grammar = get_grammar(get_pieces())
-grammar0= '["night", "[unk]"]'
-grammar = '["knight h three", "knight f three", "knight c three", "knight a three", "h three", "g three", "f three", "e three", "d three", "c three", "b three", "a three", "h four", "g four", "f four", "e four", "d four", "c four", "b four", "a four", "[unk]"]'  # to ommit
+Waiting_Myturn(driver) # Placed
+grammar, to_check = get_grammar(get_pieces())
+recognizer.SetGrammar(grammar)
+
 print("===> Begin recording. Press Ctrl+C to stop the recording ")
 recognizer.SetGrammar(grammar)
 try:
@@ -71,7 +71,27 @@ try:
                            callback=recordCallback):
         while True:
             data = q.get()
-            rec_process(data, recognizer)
+            if recognizer.AcceptWaveform(data):
+
+                recognizerResult = recognizer.Result()
+                #print("recognizerResult:", recognizerResult)
+                # convert the recognizerResult string into a dictionary  
+                resultDict = json.loads(recognizerResult)
+                if not resultDict.get("text", "") == "":
+                    print("-> ", resultDict['text'])
+                    SpokeN=resultDict['text']
+                    print(to_check)
+                    if "unk"  not in SpokeN and len(SpokeN.split()) >= 2 and SpokeN in to_check:
+                        fen_ToSend = Spoken_ToFen(SpokeN)
+                        print("Sending \"{}\" to selenium".format(fen_ToSend))
+                        Keyboard_commands(driver, fen_ToSend)
+                        Waiting_Myturn(driver) # Placed
+                        grammar, to_check = get_grammar(get_pieces())
+                        #breakpoint()
+                        recognizer.SetGrammar(grammar)
+                        print("command is received")
+                else:
+                    print("no input sound")
 
 except KeyboardInterrupt:
     print('===> Finished Recording')

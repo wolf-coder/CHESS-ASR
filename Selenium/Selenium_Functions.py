@@ -1,8 +1,9 @@
 import re
+import getpass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
+from time import sleep
 def Connect_To_Lichess(driver):
     """
     """
@@ -12,12 +13,17 @@ def Connect_To_Lichess(driver):
     Password = driver.find_element(by=By.ID, value="form3-password")
 
     Username.send_keys("mathematical_gambler")
-    Password.send_keys("24989127aZ")# Privacy violation
+    try:
+        p = getpass.getpass()
+    except Exception as error:
+        print('ERROR', error)
+    else:
+        Password.send_keys(p)
 
     Log_in_button = driver.find_element(By.CSS_SELECTOR, "#main-wrap > main > form > div.one-factor > button")
     Log_in_button.click()
 
-
+import getpass
 # Keyboard_commands
 def Keyboard_commands(driver, command):
     """
@@ -26,6 +32,7 @@ def Keyboard_commands(driver, command):
     Keyboard = driver.find_element(By.CSS_SELECTOR, "#main-wrap > main > div.round__app.variant-standard > div.keyboard-move > input") # 
     Keyboard.clear()
     Keyboard.send_keys(command)
+    sleep(1)
 
 
 def Waiting_Myturn(driver):

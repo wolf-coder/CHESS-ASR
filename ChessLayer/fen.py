@@ -6,7 +6,7 @@ Piece = {'K':"king",'Q':"queen",'N':"knight",'R':"rook",'B':"bishop"}
 
 Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'seven','8':'eight'}
 
-Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x',""}
+Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x'}
 
 
 def Parse_move(move):
@@ -124,11 +124,11 @@ def get_pieces():
 
 def get_grammar(legal_moves):
     """
-    processing the possible moves to spoken text
-    yourstring = "L{0}L".format(yourstring)
     """
     grammar = ''
+    to_check= []
     for key, value in legal_moves.items():
         for elem in value:
+            to_check.append(elem)
             grammar+='\"{0}\", '.format(elem)
-    return '[{0}\"[unk]\"]'.format(grammar)
+    return '[{0}\"[unk]\"]'.format(grammar), to_check
