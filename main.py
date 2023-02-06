@@ -5,8 +5,10 @@ from vosk import Model, KaldiRecognizer
 import sys
 import json
 
-
 # selenium requirements
+from os import chdir
+chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
