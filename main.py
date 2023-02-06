@@ -82,5 +82,3 @@ except KeyboardInterrupt:
 except Exception as e:
     print(str(e))
 
-
-#rec.SetGrammar('["one zero one two three oh", "four five six", "seven eight nine zero", "[unk]"]')
