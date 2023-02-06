@@ -72,7 +72,6 @@ try:
                         Keyboard_commands(driver, fen_ToSend)
                         Waiting_Myturn(driver) # Placed
                         grammar, to_check = get_grammar(get_pieces())
-                        #breakpoint()
                         recognizer.SetGrammar(grammar)
                         print("command is received")
                 else:
