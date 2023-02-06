@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""
-Resource:https://singerlinks.com/2022/03/how-to-convert-microphone-speech-to-text-using-python-and-vosk/
-"""
-###  to delete
-from os import chdir
-chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
-###
-
-
 import queue
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer
@@ -15,23 +6,21 @@ import sys
 import json
 
 
-####  to start selenium
+# selenium requirements
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 from   Selenium.Selenium_Functions import *
 from ChessLayer.fen import *
-####
 
-'''This script processes audio input from the microphone and displays the transcribed text.'''
 
-# list all audio devices known to your system
-print("Display input/output devices")
+# list Input/Output devices
+print("input/output devices:")
 print(sd.query_devices())
 
 
-# get the samplerate - this is needed by the Kaldi recognizer
+# get the sample rate 
 device_info = sd.query_devices(sd.default.device[0], 'input')
 samplerate = int(device_info['default_samplerate'])
 
