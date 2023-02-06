@@ -47,13 +47,11 @@ recognizer.SetWords(False)
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 Connect_To_Lichess(driver) #?
-###
+
 Waiting_Myturn(driver) # Placed
 grammar, to_check = get_grammar(get_pieces())
 recognizer.SetGrammar(grammar)
 
-print("===> Begin recording. Press Ctrl+C to stop the recording ")
-recognizer.SetGrammar(grammar)
 try:
     with sd.RawInputStream(dtype='int16',
                            channels=1,
