@@ -9,9 +9,10 @@
 * 0. Presentation
 ** Please provide your Google slides below. The presentation should include:
 *** Short description of the project and team
-- Selenium
-- vosk, Kaldi
-- lichess api
+- In this project, I have implemented speech-to-text technology to control an online chess game by voice.
+- In Simple words, the speech is processed by a vosk-model that outputs an fen command notation. Then a selenium chrome-driver will execute the command move.
+
+
 *** Demo (either live (deployed publicly or in localhost) or recorded in a Youtube video)
 *** Architecture put in place
 **** vosk, Kaldi
@@ -19,34 +20,92 @@
 - FST
 - dictionary
 **** Selenium
-- 
 **** lichess
 ***** lichess api
 ***** lichess account setup
 *** Technologies and/or third services used
-***** Selenium
-***** vosk, Kaldi
-***** lichess api
+**** Selenium
+- Selenium is an open-source software suite for automating web browsers.
+- I used a Selenium ChromeDriver to automate the process of accessing Lichess and interacting with the chessboard.
+**** vosk
+- Vosk is an offline open source speech recognition toolkit build on top of Kaldi. I updated a language model  to convert speech into text, which was then processed to translate the speech into a corresponding move on the chessboard.
+**** kaldi
+- Kaldi is a toolkit for speech recognition, intended for use by speech recognition researchers and professionals. I Updated the kaldi model used in Vosk by recompiling its language model from a large text containing Spoken chess moves notation.
+**** Lichess API
+- I utilized the Lichess API to retrieve information about the chessboard and update the Dynamic language model in runtime.
+**** Python chess
+- python-chess is a chess library for Python, with move generation, move validation, and support for common formats. It was used to determine the legal moves for an chess position.
+**** Awk/Bash scripting
+- I used the Awk and Bash scripting languages to generate the large text requiered in the kaldi graph recompilation step.
+
 *** Report of your developments:
 **** Successes
-- vosk language model adaptation
+
+1) Updating the Kaldi Languages model by adjusting the  probability of the words to improve the recognition:
+   - for that, I have recompiled the language model from a large text of spoken chess notations.
+
+2) Building a solid back-end for a dynamic environment:
+   - Ensured an efficient modification of the model recognizer vocabulary in runtime.
+   - Ensured a solid syncronization between our model and the online chess game.
 
 **** Failures
-- 
+1. As for any (ASR) model, dealing with the background =noise= was challenging:
+   * Even with scoring a good result with the modificatioon of language model on runtime and increasing the probabilites of our specific domain  words, there was inuccracy in transcribing speech in the presence of high noises frequencies or significant interferences.
 **** What can you improve?
-- acouastic model training
+- Training the kaldi acoustic model. For that, collecting the data of at least 50 hours of chess streaming audio data is requiered.
+
 **** What did you learn?
-- ASR complication
-- The complication of audio segmentation
-- The importance of GHMM, HMM
-- Processincg audio waveform
+- What I have learned during the building of this project can be classified into two categories:
+
+***** Knowledge acquisition: Understanding The fundamental concepts behind Automatic Speech Recognition (ASR)
+-In a speech recognition system, the process of identifying a sequence of keywords typically involves several steps:
+****** 1. =Audio preprocessing=
+- The raw audio signal is typically first preprocessed to remove noise and improve the signal-to-noise ratio.
+****** 2. =Feature extraction=
+- In the feature extraction step of a speech recognition system, the goal is to extract a set of features from the raw audio signal that capture important characteristics of the speech signal. These features are designed to be representative of the acoustic properties of the speech signal and are typically derived from the spectral characteristics of the signal.
+
+- There are many different ways to extract features from a speech signal, and the specific method used will depend on the particular application and the requirements of the speech recognition system.
+
+- Kaldi uses the =Mel-Frequency Cepstral Coefficients (MFCCs)=:
+  * They are a common choice for speech recognition systems, as they are robust to variations in pitch and speaker characteristics. MFCCs are derived from the power spectrum of the signal, and capture the spectral envelope of the signal in a compact form.
+****** 3. =Acoustic modeling=
+- The extracted features are then compared to a model of the acoustic properties of the keywords being searched for. This model is typically a statistical model trained on a large dataset of speech samples.
+****** 4. =Language modeling=
+- In addition to the acoustic model, a language model is also used to take into account the probability of different sequences of words occurring in natural language. This helps to reduce false positives and improve the overall accuracy of the system.
+****** 5. =Decoding=
+- The output of the acoustic and language models is then combined and decoded to produce a transcript of the spoken words. The transcript is then searched for the desired keywords.    
+***** The importance of the Hidden Markov Models is ASR :
+- The automatic Speech Recognition adds more importance to the HMM as a key  concept in the AI's real word applications:
+  * After preprocessing the audio into suitable features, audio segmentation must be hundled. Kaldi uses Gaussian Mixture Model/Hidden Markov Model (GMM/HMM) framework to train its monophone model and then converts the HMM objects to an FST graph to be loaded at the model import step:(line 8)
+model = vosk.Model(`KALDI-MODEL`)
+#+begin_src python
+1:LOG (VoskAPI:ReadDataFiles():model.cc:213) Decoding params beam=10 max-active=3000 lattice-beam=2
+2:LOG (VoskAPI:ReadDataFiles():model.cc:216) Silence phones 1:2:3:4:5:6:7:8:9:10
+3:LOG (VoskAPI:RemoveOrphanNodes():nnet-nnet.cc:948) Removed 0 orphan nodes.
+4:LOG (VoskAPI:RemoveOrphanComponents():nnet-nnet.cc:847) Removing 0 orphan components.
+5:LOG (VoskAPI:ReadDataFiles():model.cc:248) Loading i-vector extractor from /home/cuore-pc/.cache/vosk/KALDI-MODEL/ivector/final.ie
+6:LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:183) Computing derived variables for iVector extractor
+7:LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:204) Done.
+8:LOG (VoskAPI:ReadDataFiles():model.cc:282) Loading HCL and G from /home/cuore-pc/.cache/vosk/KALDI-MODEL/graph/HCLr.fst /home/cuore-pc/.cache/vosk/KALDI-MODEL/graph/Gr.fst
+9:LOG (VoskAPI:ReadDataFiles():model.cc:308) Loading winfo /home/cuore-pc/.cache/vosk/KALDI-MODEL/graph/phones/word_boundary.int
+#+end_src
 
 *** What’s the next steps of your project?
-- Migrating the project to an application
-- websocket
+- This project represents an MVP step in the development of a desktop/mobile application that will implement various machine learning solutions and features for the game of chess. (ASR) to voice-command chess moves is one of them. And with many available products, choosing the best solution is an important task. In this project, we succeeded to score efficient Accuracy and Time Inference result,which put =Kaldi-vosk= my choice to go forward.
+
 *** Ethical implications
 **** data privacy
 **** audio processing is done on the client side
 - no relevance in the terms of the user's privacy.
 *** Summary/conclusion
-- 
+** where to put:
+*** [[id:434787bd-b7e7-47b8-a968-6370fb948d4e][GPT [NLP]​]]: MFCC step, the process,how to build++
+*** Audio?Sound? Spectrum? [[[https://www.youtube.com/watch?v=GxBG4wUWf4w][youtube]]]
+*** * segmenting the waveform [[[https://stackoverflow.com/questions/64153590/audio-signal-split-at-word-level-boundary/65370463#65370463][link]]]
+*** we used two things:
+1. Updating recognizer vocabulary in runtime
+2. Updating the language model 
+** to check/search  for
+
+*** Language Model Adaptation (Large Russian): [[https://github.com/alphacep/vosk-api/issues/896][Github issue]] :phonetisaurus:srilm:JPG:
+*** Compilation

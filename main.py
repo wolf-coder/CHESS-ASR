@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""
-Resource:https://singerlinks.com/2022/03/how-to-convert-microphone-speech-to-text-using-python-and-vosk/
-"""
+
 ###  to delete
-from os import chdir
-chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
+#from os import chdir
+#chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
 ###
 
 
@@ -78,9 +76,9 @@ try:
                 # convert the recognizerResult string into a dictionary  
                 resultDict = json.loads(recognizerResult)
                 if not resultDict.get("text", "") == "":
-                    print("-> ", resultDict['text'])
+                    #print("-> ", resultDict['text'])
                     SpokeN=resultDict['text']
-                    print(to_check)
+                    #print(to_check)
                     if "unk"  not in SpokeN and len(SpokeN.split()) >= 2 and SpokeN in to_check:
                         fen_ToSend = Spoken_ToFen(SpokeN)
                         print("Sending \"{}\" to selenium".format(fen_ToSend))
