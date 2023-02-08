@@ -62,20 +62,26 @@ def Spoken_ToFen(Spoken):
 
 def get_fen():
     """
-    Function returning the CURRENT legal possible moves.
+    Function returning the CURRENT fen
+    FEN example of return: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     """
     headers = {'Authorization': 'Bearer lip_U49eLe81bu3RcN4Gqe4X'}
     url = "https://lichess.org/api/account/playing"
-    pgn_moves = requests.get(url, headers = headers)
-    pgn_json = pgn_moves.json()
-    fen = pgn_json["nowPlaying"][0]["fen"]
-
+    res = requests.get(url, headers = headers)
+    if res.status_code != 200:
+        print("Check your connection")
+    res_json = res.json()
+    fen = res_json["nowPlaying"][0]["fen"]
     return fen
+
 
 def get_legalMoves():
     """
+    Function that return the CURRENT possible moves to play.
+    Example of return: ['Nh3', 'Nf3', 'Nc3', 'Na3', 'h3', 'g3', 'f3', 'e3', 'd3', 'c3', 'b3', 'a3', 'h4', 'g4', 'f4', 'e4', 'd4', 'c4', 'b4', 'a4']
     """
-    board = chess.Board(get_fen())
+    fen = get_fen()
+    board = chess.Board(fen)
     legal_moves = list(board.legal_moves)
 
     moves_t = str(board.legal_moves)[37:-1]
@@ -83,8 +89,8 @@ def get_legalMoves():
     moves_t = moves_t.replace("(", "('")
     moves_t = moves_t.replace(")", "')")
     moves_t = eval(moves_t)
-    moves = []
 
+    moves = []
     for i in moves_t:
         moves.append(i)
     return moves
@@ -92,9 +98,10 @@ def get_legalMoves():
 
 def get_pieces():
     """
-    
+    Function that returns a dictionary of the CURRENT legal moves per piece in spoken version.
+    Example of return: {'knight': ['knight h three', 'knight f three'], 'pawn': ['h three']}
     """
-    moves = get_legalMoves()
+    moves = get_legalMoves() # (INPUT)
     dic = {'N':[],'P':[],'K':[],'Q':[],'B':[],'R':[]}
     for move in moves:
         if move[0].islower():
@@ -112,10 +119,15 @@ def get_pieces():
     return spk_fen
 
 
-def get_grammar(legal_moves):
+def get_grammar():
     """
-    Function 
+    Function that return a tuple of:
+      1. grammar to pass for the model recognizer.
+        - Example: '["knight h six", "knight f six", "knight c six", "[unk]"]'
+      2. `to_check`
+        - 
     """
+    legal_moves = get_pieces() # (INPUT)
     grammar = ''
     to_check= []
     for key, value in legal_moves.items():

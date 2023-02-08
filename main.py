@@ -13,22 +13,21 @@ chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-
-from   Selenium.Selenium_Functions import *
+from Selenium.Selenium_Functions import *
 from ChessLayer.fen import *
 
 
 # list Input/Output devices
-print("input/output devices:")
+print(" Displaying input/output devices:")
 print(sd.query_devices())
 
 
-# get the sample rate 
+# get the device sample rate 
 device_info = sd.query_devices(sd.default.device[0], 'input')
 samplerate = int(device_info['default_samplerate'])
 
-# display the default input device
-print("===> Initial Default Device Number:{} Description: {}".format(sd.default.device[0], device_info))
+
+print("===>  Device Number:{} \nDevice Info: {}".format(sd.default.device[0], device_info))
 
 # setup queue and callback function
 q = queue.Queue()
@@ -46,13 +45,14 @@ recognizer = KaldiRecognizer(model, samplerate)
 recognizer.SetWords(False)
 
 
-### Starting selenium
+# Starting selenium
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
-Connect_To_Lichess(driver) #?
+Connect_To_Lichess(driver)
 
-Waiting_Myturn(driver) # Placed
-grammar, to_check = get_grammar(get_pieces())
+# wait for our turn then speak our move
+Waiting_Myturn(driver) # selenium listen to an element
+grammar, to_check = get_grammar()
 recognizer.SetGrammar(grammar)
 
 try:
@@ -74,7 +74,7 @@ try:
                         print("Sending \"{}\" to selenium".format(fen_ToSend))
                         Keyboard_commands(driver, fen_ToSend)
                         Waiting_Myturn(driver) # Placed
-                        grammar, to_check = get_grammar(get_pieces())
+                        grammar, to_check = get_grammar()
                         recognizer.SetGrammar(grammar)
                         print("command is received")
                 else:

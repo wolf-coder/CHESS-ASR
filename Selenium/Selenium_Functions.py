@@ -42,4 +42,4 @@ def Waiting_Myturn(driver):
     print("Waiting Turn")
     wait = WebDriverWait(driver, 10000)
     element = wait.until(EC.presence_of_element_located((By.XPATH, "//title[contains(text(),'Your turn')]")))
-    print("Your Turn")
+    print("Your Turn, Speak your move")
