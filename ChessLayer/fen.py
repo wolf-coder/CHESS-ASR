@@ -60,18 +60,6 @@ def Spoken_ToFen(Spoken):
     return spk
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def get_fen():
     """
     """

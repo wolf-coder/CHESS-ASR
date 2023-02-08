@@ -69,7 +69,7 @@ try:
                     #print("-> ", resultDict['text'])
                     SpokeN=resultDict['text']
                     #print(to_check)
-                    if "unk"  not in SpokeN and len(SpokeN.split()) >= 2 and SpokeN in to_check:
+                    if "unk" not in SpokeN and len(SpokeN.split()) >= 2 and SpokeN in to_check:
                         fen_ToSend = Spoken_ToFen(SpokeN)
                         print("Sending \"{}\" to selenium".format(fen_ToSend))
                         Keyboard_commands(driver, fen_ToSend)
