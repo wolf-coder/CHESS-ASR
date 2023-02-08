@@ -37,11 +37,9 @@ def Keyboard_commands(driver, command):
 
 def Waiting_Myturn(driver):
     """
-    Function that listen to an element indicating whether  it is our turn  to play
-    <> and get the legal moves when 
+    Function that listen to an element indicating whether it is our turn to play.
     """
     print("Waiting Turn")
     wait = WebDriverWait(driver, 10000)
     element = wait.until(EC.presence_of_element_located((By.XPATH, "//title[contains(text(),'Your turn')]")))
-
     print("Your Turn")
