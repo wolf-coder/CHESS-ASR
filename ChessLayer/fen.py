@@ -62,12 +62,13 @@ def Spoken_ToFen(Spoken):
 
 def get_fen():
     """
+    Function returning the CURRENT legal possible moves.
     """
     headers = {'Authorization': 'Bearer lip_U49eLe81bu3RcN4Gqe4X'}
     url = "https://lichess.org/api/account/playing"
-    pgn = requests.get(url, headers = headers)
-    pgnjson = pgn.json()
-    fen = pgnjson["nowPlaying"][0]["fen"]
+    pgn_moves = requests.get(url, headers = headers)
+    pgn_json = pgn_moves.json()
+    fen = pgn_json["nowPlaying"][0]["fen"]
 
     return fen
 
@@ -91,6 +92,7 @@ def get_legalMoves():
 
 def get_pieces():
     """
+    
     """
     moves = get_legalMoves()
     dic = {'N':[],'P':[],'K':[],'Q':[],'B':[],'R':[]}
@@ -112,6 +114,7 @@ def get_pieces():
 
 def get_grammar(legal_moves):
     """
+    Function 
     """
     grammar = ''
     to_check= []
