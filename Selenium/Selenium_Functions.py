@@ -1,5 +1,6 @@
 import re
 import getpass
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -32,6 +33,7 @@ def Keyboard_commands(driver, command):
     Keyboard = driver.find_element(By.CSS_SELECTOR, "#main-wrap > main > div.round__app.variant-standard > div.keyboard-move > input") # 
     Keyboard.clear()
     Keyboard.send_keys(command)
+    Keyboard.send_keys(Keys.RETURN)
     sleep(1)
 
 

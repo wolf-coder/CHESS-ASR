@@ -77,6 +77,8 @@ try:
                         grammar, to_check = get_grammar()
                         recognizer.SetGrammar(grammar)
                         print("command is received")
+                    else:
+                        print("{}: Not a move/legal_move".format(SpokeN))
                 else:
                     print("no input sound")
 

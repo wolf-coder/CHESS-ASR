@@ -6,7 +6,7 @@ Piece = {'K':"king",'Q':"queen",'N':"knight",'R':"rook",'B':"bishop"}
 
 Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'seven','8':'eight'}
 
-Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x'}
+Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x',"check":'x'}
 
 
 def Parse_move(move):
@@ -21,9 +21,9 @@ def Parse_move(move):
     for char in move:
         if char == 'O':
             if len(move) == 3:
-                Parsed+="short castling"
+                Parsed+="short castle"
             else:
-                Parsed+="long castling"
+                Parsed+="long castle"
             break
         if char == 'x':
             Parsed+='takes on '
@@ -47,10 +47,15 @@ def Spoken_ToFen(Spoken):
     convert Spoken text to fen
     Finish short castling...checkmate
     """
+    if Spoken == 'short castle':
+        return 'O-O'
+    if Spoken == 'long castle':
+        return 'O-O-O'
     Spoken = Spoken.replace("takes on", "x")
     Spoken = Spoken.replace("take on", "x")
     To_list = Spoken.split()
-    
+
+
     spk =  ''
     for  elem  in  To_list:
         if len(elem) == 1:
@@ -89,6 +94,12 @@ def get_legalMoves():
     moves_t = moves_t.replace("(", "('")
     moves_t = moves_t.replace(")", "')")
     moves_t = eval(moves_t)
+    """
+    moves_t: more than one move to play: ('Kf8', 'dxc5', 'g5', 'd5', 'a5')
+    moves_t: one move to play: 'Kf8'
+    """
+    if type(moves_t) is not tuple: # One single move
+        return [moves_t]
 
     moves = []
     for i in moves_t:
@@ -101,17 +112,25 @@ def get_pieces():
     Function that returns a dictionary of the CURRENT legal moves per piece in spoken version.
     Example of return: {'knight': ['knight h three', 'knight f three'], 'pawn': ['h three']}
     """
-    moves = get_legalMoves() # (INPUT)
+    moves = get_legalMoves() # (INPUT: list of pgn leal moves)
+
     dic = {'N':[],'P':[],'K':[],'Q':[],'B':[],'R':[]}
     for move in moves:
         if move[0].islower():
             dic['P'].append(move)
         else:
-            dic[move[0]].append(move)
-    pieces = {'knight':dic['N'],'pawn':dic['P'],'king':dic['K'],'queen':dic['Q'],'bishop':dic['B'],'rook':dic['R']}
-    updated = dict((key,value) for key, value in pieces.items() if value != [])
-    spk_fen={}
+            if move[0] == 'O': # Castling move
+                dic['K'].append(move)
+            else:
+                dic[move[0]].append(move)
+
+    pieces = {'knight':dic['N'], 'pawn':dic['P'], 'king':dic['K'], 'queen':dic['Q'], 'bishop':dic['B'], 'rook':dic['R']}
     
+    # do not include pieces with no move to play
+    updated = dict((key,value) for key, value in pieces.items() if value != []) 
+
+    # get the spoken version of notation
+    spk_fen={}
     for key in updated.keys():
         spk_fen[key] = []
         for fen in updated[key]:
