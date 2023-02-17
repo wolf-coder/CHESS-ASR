@@ -6,10 +6,6 @@ from vosk import Model, KaldiRecognizer
 import sys
 import json
 
-# selenium requirements
-from os import chdir
-chdir("/home/cuore-pc/Programming/Project/Chess-ASR/")
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -70,7 +66,7 @@ try:
                         fen_ToSend = Spoken_ToFen(SpokeN)
                         print("Sending \"{}\" to selenium".format(fen_ToSend))
                         Keyboard_commands(driver, fen_ToSend)
-                        Waiting_Myturn(driver) # Placed
+                        Waiting_Myturn(driver)
                         grammar, to_check = get_grammar()
                         recognizer.SetGrammar(grammar)
                         print("command is received")

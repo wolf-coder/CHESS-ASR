@@ -2,6 +2,11 @@
 
 - A solution for playing chess on Lichess using speech-to-text technology.
 - The solution is developed using Vosk, Selenium, Lichess API, and Chess-python.
+* Important notes
+- This project represents an MVP step in the development of a desktop/mobile application that will implement various machine learning solutions and features for the game of chess. One of these features will be an ASR model allowing users to dictate their `moves` instead of writing them down with the keyboard or using the mouse.
+
+- The solution should be working fine with [[https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip][vosk-model-small-en-us]]. However, for our =chess-finetuned= model , you should contact me.
+
 * Install
 1. Clone the repository
    #+begin_src shell
@@ -12,6 +17,16 @@ git clone https://github.com/wolf-coder/CHESS-ASR
 pip install -r requierements.txt     
    #+end_src
 
+* Preperation
+** 1) Enable lichess keyboard moves
+- Set this option to 'Yes' at [[https://lichess.org/account/preferences/game-behavior][game behavior]]:
+[[file:.Pictures/Input_Keyboard.png]]
+** 2) Lichess API Key
+1. Get an API access token at [[https://lichess.org/account/oauth/token][Lichess Token]]
+2. Place it at secret.key
 
 * Usage
-1. 
+#+begin_src shell
+python main.py
+#+end_src
+

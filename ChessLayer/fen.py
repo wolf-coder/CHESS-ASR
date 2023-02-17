@@ -9,6 +9,18 @@ Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'s
 Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x',"check":'x'}
 
 
+def API_token():
+    """
+    Return the api token from `secret.key`
+    """
+    with open ("secret.key","r") as pf:
+        token = pf.readline()
+    return 'Bearer '+ token
+
+
+Token = API_token()
+
+
 def Parse_move(move):
     """
     Function that takes a move and transcribe it to spoken text.
@@ -70,7 +82,7 @@ def get_fen():
     Function returning the CURRENT fen
     FEN example of return: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     """
-    headers = {'Authorization': 'Bearer lip_U49eLe81bu3RcN4Gqe4X'}
+    headers = {'Authorization': Token}
     url = "https://lichess.org/api/account/playing"
     res = requests.get(url, headers = headers)
     if res.status_code != 200:
