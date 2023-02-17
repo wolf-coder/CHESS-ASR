@@ -2,20 +2,26 @@
 import requests
 import chess
 
-Piece = {'K':"king",'Q':"queen",'N':"knight",'R':"rook",'B':"bishop"}
+Piece = {'K': "king", 'Q': "queen", 'N': "knight", 'R': "rook", 'B': "bishop"}
 
-Number = {'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six','7':'seven','8':'eight'}
+Number = {'1': 'one', '2': 'two', '3': 'three',
+          '4': 'four', '5': 'five', '6': 'six',
+          '7': 'seven', '8': 'eight'}
 
-Wrapped_Spk = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8',"king":'K',"queen":'Q',"knight":'N',"rook":'R',"bishop":'B',"x":'x',"check":'x'}
+Wrapped_Spk = {'one': '1', 'two': '2', 'three': '3',
+               'four': '4', 'five': '5', 'six': '6',
+               'seven': '7', 'eight': '8', "king": 'K',
+               "queen": 'Q', "knight": 'N', "rook": 'R',
+               "bishop": 'B', "x": 'x', "check": 'x'}
 
 
 def API_token():
     """
     Return the api token from `secret.key`
     """
-    with open ("secret.key","r") as pf:
+    with open("secret.key", "r") as pf:
         token = pf.readline()
-    return 'Bearer '+ token
+    return 'Bearer ' + token
 
 
 Token = API_token()
@@ -33,25 +39,24 @@ def Parse_move(move):
     for char in move:
         if char == 'O':
             if len(move) == 3:
-                Parsed+="short castle"
+                Parsed += "short castle"
             else:
-                Parsed+="long castle"
+                Parsed += "long castle"
             break
         if char == 'x':
-            Parsed+='takes on '
+            Parsed += 'takes on '
         elif char == '+':
-            Parsed+=' check'
+            Parsed += ' check'
         elif char.isupper():
-           Parsed+= Piece[char] + " "
+            Parsed += Piece[char] + " "
         elif char.islower():
-           Parsed+= char + " "
+            Parsed += char + " "
         elif char.isdigit():
-           Parsed+= Number[char]+ " "
+            Parsed += Number[char] + " "
         elif char == '#':
-            Parsed+=" Checkmate"
-    Parsed+=" \n"
+            Parsed += " Checkmate"
+    Parsed += " \n"
     return " ".join(Parsed.split())
-
 
 
 def Spoken_ToFen(Spoken):
@@ -67,27 +72,28 @@ def Spoken_ToFen(Spoken):
     Spoken = Spoken.replace("take on", "x")
     To_list = Spoken.split()
 
-
-    spk =  ''
-    for  elem  in  To_list:
+    spk = ''
+    for elem in To_list:
         if len(elem) == 1:
-            spk+=elem
+            spk += elem
         else:
-            spk+=Wrapped_Spk[elem]
+            spk += Wrapped_Spk[elem]
     return spk
 
 
 def get_fen():
     """
     Function returning the CURRENT fen
-    FEN example of return: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+    FEN example of return:
+      'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     """
     headers = {'Authorization': Token}
     url = "https://lichess.org/api/account/playing"
-    res = requests.get(url, headers = headers)
+    res = requests.get(url, headers=headers)
     if res.status_code != 200:
         print("Check your connection")
     res_json = res.json()
+
     fen = res_json["nowPlaying"][0]["fen"]
     return fen
 
@@ -95,7 +101,7 @@ def get_fen():
 def get_legalMoves():
     """
     Function that return the CURRENT possible moves to play.
-    Example of return: ['Nh3', 'Nf3', 'Nc3', 'Na3', 'h3', 'g3', 'f3', 'e3', 'd3', 'c3', 'b3', 'a3', 'h4', 'g4', 'f4', 'e4', 'd4', 'c4', 'b4', 'a4']
+    Example of return: ['Nh3', 'Nf3', 'Nc3', 'Na3', 'h3', 'g3']
     """
     fen = get_fen()
     board = chess.Board(fen)
@@ -110,7 +116,7 @@ def get_legalMoves():
     moves_t: more than one move to play: ('Kf8', 'dxc5', 'g5', 'd5', 'a5')
     moves_t: one move to play: 'Kf8'
     """
-    if type(moves_t) is not tuple: # One single move
+    if type(moves_t) is not tuple:  # One single move
         return [moves_t]
 
     moves = []
@@ -121,28 +127,33 @@ def get_legalMoves():
 
 def get_pieces():
     """
-    Function that returns a dictionary of the CURRENT legal moves per piece in spoken version.
-    Example of return: {'knight': ['knight h three', 'knight f three'], 'pawn': ['h three']}
+    Function that returns a dictionary of the CURRENT legal
+      moves per piece in spoken version.
+    Example of return: {'knight': ['knight h three', 'knight f three'],
+      'pawn': ['h three']}
     """
-    moves = get_legalMoves() # (INPUT: list of pgn leal moves)
+    moves = get_legalMoves()  # (INPUT: list of pgn leal moves)
 
-    dic = {'N':[],'P':[],'K':[],'Q':[],'B':[],'R':[]}
+    dic = {'N': [], 'P': [], 'K': [], 'Q': [], 'B': [], 'R': []}
     for move in moves:
         if move[0].islower():
             dic['P'].append(move)
         else:
-            if move[0] == 'O': # Castling move
+            if move[0] == 'O':  # Castling move
                 dic['K'].append(move)
             else:
                 dic[move[0]].append(move)
 
-    pieces = {'knight':dic['N'], 'pawn':dic['P'], 'king':dic['K'], 'queen':dic['Q'], 'bishop':dic['B'], 'rook':dic['R']}
-    
+    pieces = {'knight': dic['N'], 'pawn': dic['P'],
+              'king': dic['K'], 'queen': dic['Q'],
+              'bishop': dic['B'], 'rook': dic['R']}
+
     # do not include pieces with no move to play
-    updated = dict((key,value) for key, value in pieces.items() if value != []) 
+    updated = dict((key, value) for key, value in pieces.items()
+                   if value != [])
 
     # get the spoken version of notation
-    spk_fen={}
+    spk_fen = {}
     for key in updated.keys():
         spk_fen[key] = []
         for fen in updated[key]:
@@ -156,13 +167,12 @@ def get_grammar():
       1. grammar to pass for the model recognizer.
         - Example: '["knight h six", "knight f six", "knight c six", "[unk]"]'
       2. `to_check`
-        - 
     """
-    legal_moves = get_pieces() # (INPUT)
+    legal_moves = get_pieces()  # (INPUT)
     grammar = ''
-    to_check= []
+    to_check = []
     for key, value in legal_moves.items():
         for elem in value:
             to_check.append(elem)
-            grammar+='\"{0}\", '.format(elem)
+            grammar += '\"{0}\", '.format(elem)
     return '[{0}\"[unk]\"]'.format(grammar), to_check
