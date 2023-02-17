@@ -23,7 +23,7 @@ pip install -r requierements.txt
 [[file:.Pictures/Input_Keyboard.png]]
 ** 2) Lichess API Key
 1. Get an API access token at [[https://lichess.org/account/oauth/token][Lichess Token]]
-2. Place it at secret.key
+2. Place it in secret.key
 
 * Usage
 #+begin_src shell
