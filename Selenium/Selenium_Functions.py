@@ -5,6 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from time import sleep
+import getpass
+
+
 def Connect_To_Lichess(driver):
     """
     """
@@ -20,17 +23,18 @@ def Connect_To_Lichess(driver):
         print('ERROR', error)
     else:
         Password.send_keys(p)
-
-    Log_in_button = driver.find_element(By.CSS_SELECTOR, "#main-wrap > main > form > div.one-factor > button")
+    Selector = "#main-wrap > main > form > div.one-factor > button"
+    Log_in_button = driver.find_element(By.CSS_SELECTOR, Selector)
     Log_in_button.click()
 
-import getpass
+
 # Keyboard_commands
 def Keyboard_commands(driver, command):
     """
     command: keyboard notations to be played
     """
-    Keyboard = driver.find_element(By.CSS_SELECTOR, "#main-wrap > main > div.round__app.variant-standard > div.keyboard-move > input") # 
+    Selector = "#main-wrap > main > div.round__app.variant-standard > div.keyboard-move > input"
+    Keyboard = driver.find_element(By.CSS_SELECTOR, Selector)
     Keyboard.clear()
     Keyboard.send_keys(command)
     Keyboard.send_keys(Keys.RETURN)
@@ -39,7 +43,8 @@ def Keyboard_commands(driver, command):
 
 def Waiting_Myturn(driver):
     """
-    Function that listen to an element indicating whether it is our turn to play.
+    Function that listen to an element indicating whether it
+    is our turn to play.
     """
     print("Waiting Turn")
     wait = WebDriverWait(driver, 10000)
