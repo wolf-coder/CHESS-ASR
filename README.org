@@ -1,0 +1,17 @@
+#+title: Chess-ASR
+
+- A solution for playing chess on Lichess using speech-to-text technology.
+- The solution is developed using Vosk, Selenium, Lichess API, and Chess-python.
+* Install
+1. Clone the repository
+   #+begin_src shell
+git clone https://github.com/wolf-coder/CHESS-ASR      
+   #+end_src
+2. Install the requierements
+   #+begin_src shell
+pip install -r requierements.txt     
+   #+end_src
+
+
+* Usage
+1. 

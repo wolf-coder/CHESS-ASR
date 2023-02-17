@@ -1,0 +1,4 @@
+sounddevice
+vosk
+selenium
+chess
