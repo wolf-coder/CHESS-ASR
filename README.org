@@ -30,3 +30,5 @@ pip install -r requierements.txt
 python main.py
 #+end_src
 
+* Showcase video
+[[https://www.youtube.com/watch?v=bAUKY7K5bbY][Watch on youtube]]
